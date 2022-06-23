@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -18,13 +20,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private $email;
+    private ?string $email;
 
     #[ORM\Column(type: 'json')]
-    private $roles = [];
+    private array $roles = [];
 
     #[ORM\Column(type: 'string')]
-    private $password;
+    private string $password;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Lineup::class, orphanRemoval: true)]
+    private ArrayCollection $lineups;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Player::class)]
+    private ArrayCollection $players;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Score::class)]
+    private ArrayCollection $scores;
+
+    public function __construct()
+    {
+        $this->lineups = new ArrayCollection();
+        $this->players = new ArrayCollection();
+        $this->scores = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -94,5 +112,95 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Lineup>
+     */
+    public function getLineups(): Collection
+    {
+        return $this->lineups;
+    }
+
+    public function addLineup(Lineup $lineup): self
+    {
+        if (!$this->lineups->contains($lineup)) {
+            $this->lineups[] = $lineup;
+            $lineup->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLineup(Lineup $lineup): self
+    {
+        if ($this->lineups->removeElement($lineup)) {
+            // set the owning side to null (unless already changed)
+            if ($lineup->getUser() === $this) {
+                $lineup->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Player>
+     */
+    public function getPlayers(): Collection
+    {
+        return $this->players;
+    }
+
+    public function addPlayer(Player $player): self
+    {
+        if (!$this->players->contains($player)) {
+            $this->players[] = $player;
+            $player->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlayer(Player $player): self
+    {
+        if ($this->players->removeElement($player)) {
+            // set the owning side to null (unless already changed)
+            if ($player->getUser() === $this) {
+                $player->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Score>
+     */
+    public function getScores(): Collection
+    {
+        return $this->scores;
+    }
+
+    public function addScore(Score $score): self
+    {
+        if (!$this->scores->contains($score)) {
+            $this->scores[] = $score;
+            $score->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScore(Score $score): self
+    {
+        if ($this->scores->removeElement($score)) {
+            // set the owning side to null (unless already changed)
+            if ($score->getUser() === $this) {
+                $score->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
