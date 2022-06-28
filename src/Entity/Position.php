@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PositionRepository::class)]
+#[ORM\Table(name: 'soc_position')]
 class Position
 {
     #[ORM\Id]
@@ -25,7 +26,10 @@ class Position
     private ?string $colorName;
 
     #[ORM\OneToMany(mappedBy: 'position', targetEntity: Player::class)]
-    private ArrayCollection $players;
+    private Collection $players;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $infoUri;
 
     public function __construct()
     {
@@ -99,6 +103,23 @@ class Position
                 $player->setPosition(null);
             }
         }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
+    public function getInfoUri(): ?string
+    {
+        return $this->infoUri;
+    }
+
+    public function setInfoUri(string $infoUri): self
+    {
+        $this->infoUri = $infoUri;
 
         return $this;
     }

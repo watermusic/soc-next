@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
+#[ORM\Table(name: 'soc_team')]
 class Team
 {
     #[ORM\Id]
@@ -19,13 +20,13 @@ class Team
     private ?string $name;
 
     #[ORM\OneToMany(mappedBy: 'team', targetEntity: Player::class)]
-    private ArrayCollection $players;
+    private Collection $players;
 
     #[ORM\OneToMany(mappedBy: 'guestTeam', targetEntity: Game::class)]
-    private ArrayCollection $guestGames;
+    private Collection $guestGames;
 
     #[ORM\OneToMany(mappedBy: 'homeTeam', targetEntity: Game::class)]
-    private ArrayCollection $homeGames;
+    private Collection $homeGames;
 
     public function __construct()
     {
@@ -139,5 +140,10 @@ class Team
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
     }
 }

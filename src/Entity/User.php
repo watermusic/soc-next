@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: 'soc_user')]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -29,13 +30,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $password;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Lineup::class, orphanRemoval: true)]
-    private ArrayCollection $lineups;
+    private Collection $lineups;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Player::class)]
-    private ArrayCollection $players;
+    private Collection $players;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Score::class)]
-    private ArrayCollection $scores;
+    private Collection $scores;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $name;
 
     public function __construct()
     {
@@ -200,6 +204,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $score->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

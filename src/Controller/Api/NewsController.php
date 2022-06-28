@@ -1,14 +1,18 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use App\Provider\KickerProvider;
+use DateTime;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DashboardController extends AbstractController
+
+class NewsController extends AbstractController
 {
     private KickerProvider $kickerProvider;
 
@@ -20,14 +24,9 @@ class DashboardController extends AbstractController
     /**
      * @throws Exception
      */
-    #[Route('/dashboard', name: 'app_dashboard')]
+    #[Route('/api/news', name: 'api_news')]
     public function index(): Response
     {
-
-
-        return $this->render('dashboard/index.html.twig', [
-            'controller_name' => 'DashboardController',
-            'news' => $this->kickerProvider->getNewsAsArray()
-        ]);
+        return new JsonResponse(['news' => $this->kickerProvider->getNewsAsArray()]);
     }
 }

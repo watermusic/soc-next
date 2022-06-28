@@ -6,6 +6,7 @@ use App\Repository\ScoreRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScoreRepository::class)]
+#[ORM\Table(name: 'soc_score')]
 class Score
 {
     #[ORM\Id]

@@ -6,6 +6,7 @@ use App\Repository\PlayerRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlayerRepository::class)]
+#[ORM\Table(name: 'soc_player')]
 class Player
 {
     #[ORM\Id]
@@ -16,10 +17,10 @@ class Player
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $name;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $fee;
+    #[ORM\Column(type: 'bigint', nullable: true)]
+    private ?int $signingFee;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'bigint')]
     private ?int $marketValue;
 
     #[ORM\Column(type: 'float')]
@@ -42,6 +43,15 @@ class Player
     #[ORM\JoinColumn(nullable: false)]
     private ?Team $team;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $externalThumbUrl;
+
+    #[ORM\Column(type: 'integer')]
+    private ?int $externalId;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $externalDetailsUrl;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,14 +69,14 @@ class Player
         return $this;
     }
 
-    public function getFee(): ?int
+    public function getSigningFee(): ?int
     {
-        return $this->fee;
+        return $this->signingFee;
     }
 
-    public function setFee(?int $fee): self
+    public function setSigningFee(?int $signingFee): self
     {
-        $this->fee = $fee;
+        $this->signingFee = $signingFee;
 
         return $this;
     }
@@ -153,5 +163,46 @@ class Player
         $this->team = $team;
 
         return $this;
+    }
+
+    public function getExternalThumbUrl(): ?string
+    {
+        return $this->externalThumbUrl;
+    }
+
+    public function setExternalThumbUrl(string $externalThumbUrl): self
+    {
+        $this->externalThumbUrl = $externalThumbUrl;
+
+        return $this;
+    }
+
+    public function getExternalId(): ?int
+    {
+        return $this->externalId;
+    }
+
+    public function setExternalId(int $externalId): self
+    {
+        $this->externalId = $externalId;
+
+        return $this;
+    }
+
+    public function getExternalDetailsUrl(): ?string
+    {
+        return $this->externalDetailsUrl;
+    }
+
+    public function setExternalDetailsUrl(?string $externalDetailsUrl): self
+    {
+        $this->externalDetailsUrl = $externalDetailsUrl;
+
+        return $this;
+    }
+
+    public function getStorageKey(): string
+    {
+        return 'player/'.$this->getExternalId().'.png';
     }
 }

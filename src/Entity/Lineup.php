@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LineupRepository::class)]
+#[ORM\Table(name: 'soc_lineup')]
 class Lineup
 {
     #[ORM\Id]

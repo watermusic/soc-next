@@ -1,0 +1,9 @@
+knp_gaufrette:
+    adapters:
+        adapter_public_images:
+            local:
+                directory: "%kernel.project_dir%/public/images"
+
+    filesystems:
+        public_images:
+            adapter: adapter_public_images
