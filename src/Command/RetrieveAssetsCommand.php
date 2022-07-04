@@ -4,6 +4,7 @@
 
 namespace App\Command;
 
+use App\Entity\Team;
 use App\Repository\PlayerRepository;
 use App\Repository\TeamRepository;
 use Knp\Bundle\GaufretteBundle\FilesystemMap;
@@ -61,6 +62,7 @@ class RetrieveAssetsCommand extends Command
         $players = $this->playerRepository->findAll();
 
         $progressBar = new ProgressBar($output, count($players));
+
         $output->writeln('Store player assets');
 
         foreach ($players as $player) {
@@ -98,18 +100,16 @@ class RetrieveAssetsCommand extends Command
         $progressBar = new ProgressBar($output, count($images));
 
         foreach ($images as $image) {
-            $teamName = $this->guessTeamName($image->attributes->getNamedItem('alt')->textContent);
+            $team = $this->guessTeamName($image->attributes->getNamedItem('alt')->textContent);
             $imageUrl = str_replace('https://derivates.kicker.de/image/fetch/w_30,h_30,c_fit,q_auto:best/', '', $image->attributes->getNamedItem('data-src')->textContent);
 
-            $key = "teams/$teamName.png";
-
-            if ($this->filesystemMap->get('public_images')->has($key)) {
+            if ($this->filesystemMap->get('public_images')->has($team->getStorageKey())) {
                 $progressBar->advance();
 
                 continue;
             }
 
-            $this->filesystemMap->get('public_images')->write($key, file_get_contents($imageUrl), true);
+            $this->filesystemMap->get('public_images')->write($team->getStorageKey(), file_get_contents($imageUrl), true);
 
             $progressBar->advance();
         }
@@ -119,7 +119,7 @@ class RetrieveAssetsCommand extends Command
         $output->writeln('');
     }
 
-    private function guessTeamName($name): string
+    private function guessTeamName($name): Team
     {
         $teams = null;
 
@@ -129,10 +129,13 @@ class RetrieveAssetsCommand extends Command
 
         foreach ($teams as $team) {
             if (str_contains(mb_strtolower($name), mb_strtolower($team->getName()))) {
-                return $team->getName();
+                return $team;
             }
         }
 
-        return $name;
+        $team = new Team();
+        $team->setName($name);
+
+        return $team;
     }
 }

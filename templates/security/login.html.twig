@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}S.O.C. - Login{% endblock %}
+
+{% block body %}
+    <div class="min-h-full flex">
+        <div class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+            <div class="mx-auto w-full max-w-sm lg:w-96">
+                <div>
+                    <img class="h-12 w-auto" src="/images/logo.svg"
+                         alt="Workflow">
+                    <h2 class="mt-6 text-3xl font-extrabold text-gray-900">{{ 'S.O.C. Login' }}</h2>
+                </div>
+
+                <div class="mt-8">
+
+                    {% if error %}
+                        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
+
+                    <div class="mt-6">
+                        <form action="{{ path('app_login') }}" class="space-y-6" method="post">
+
+                            <div>
+                                <label for="email"
+                                       class="block text-sm font-medium text-gray-700"> {{ 'E-Mail' }} </label>
+                                <div class="mt-1">
+                                    <input type="text"
+                                           class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                           id="email" name="email" value="{{ last_username }}"/>
+                                </div>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label for="password"
+                                       class="block text-sm font-medium text-gray-700"> {{ 'Passwort' }} </label>
+                                <div class="mt-1">
+                                    <input type="password"
+                                           class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                           id="password" name="password"/>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                            <input type="hidden" name="_target_path" value="{{ path('admin') }}"/>
+
+                            <div class="flex items-center justify-between">
+
+                                <div class="text-sm">
+                                    <a href="#"
+                                       class="font-medium text-indigo-600 hover:text-indigo-500"> {{ 'Passwort vergessen?' }} </a>
+                                </div>
+                            </div>
+
+                            <div>
+                                <button type="submit"
+                                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    {{ 'Anmelden' }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hidden lg:block relative w-0 flex-1">
+            <img class="absolute inset-0 h-full w-full object-cover"
+                 src="/images/misc/Klopp+BFC.webp"
+                 alt="">
+        </div>
+    </div>
+
+{% endblock %}

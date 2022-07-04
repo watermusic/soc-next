@@ -2,3 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 @tailwind screens;
+
+@layer base {
+    html {
+        font-family: Roboto Condensed, system-ui, sans-serif;
+    }
+}
+
+.player .aspect-w-4 > * {
+    height: 141%;
+}
+
+.player .portrait {
+    margin-top: -0.6rem;
+}

@@ -2,7 +2,9 @@
 
 namespace App\Provider;
 
+use App\Entity\Team;
 use App\Repository\PositionRepository;
+use App\Repository\TeamRepository;
 use DateTime;
 use Exception;
 use JetBrains\PhpStorm\ArrayShape;
@@ -11,11 +13,19 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class KickerProvider
 {
+    public const IMAGE_TEAM_DEFAULT_PATH = '/images/teams/unknown.png';
+
     private PositionRepository $positionRepository;
 
-    public function __construct(PositionRepository $positionRepository)
-    {
+    private TeamRepository $teamRepository;
+
+    public function __construct(
+        PositionRepository $positionRepository,
+        TeamRepository $teamRepository
+    ) {
         $this->positionRepository = $positionRepository;
+
+        $this->teamRepository = $teamRepository;
     }
 
     /**
@@ -26,22 +36,44 @@ class KickerProvider
     {
         $feedUrl = 'https://newsfeed.kicker.de/news/bundesliga';
 
+        $teams = $this->teamRepository->findAll();
+
         $crawler = new Crawler(file_get_contents($feedUrl));
 
         $result = [];
         foreach ($crawler->filterXPath('//rss/channel/item') as $item) {
             $element = new Crawler($item);
 
+            $description = $element->filterXPath('//description')->text();
+
             $result[] = [
                 'title' => $element->filterXPath('//title')->text(),
-                'image' => '',
+                'image' => $this->guessTeamImageByDescription($teams, $description),
                 'link' => $element->filterXPath('//link')->text(),
-                'description' => $element->filterXPath('//description')->text(),
+                'description' => $description,
                 'createdAt' => new DateTime($element->filterXPath('//pubDate')->text()),
             ];
         }
 
         return $result;
+    }
+
+    /**
+     * @param Team[] $teams
+     */
+    private function guessTeamImageByDescription(array $teams, string $description): string
+    {
+        $imagePath = null;
+
+        foreach ($teams as $team) {
+            if (str_contains(mb_strtolower($description), mb_strtolower($team->getName()))) {
+                $imagePath = $team->getPublicThumbUrl();
+
+                break;
+            }
+        }
+
+        return $imagePath ?? self::IMAGE_TEAM_DEFAULT_PATH;
     }
 
     public function getPlayersByPosition(string $position): array

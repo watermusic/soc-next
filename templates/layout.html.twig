@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+    <div class="min-h-full">
+        <nav class="bg-gray-800">
+            {% include '_nav.html.twig' %}
+        </nav>
+
+        {% block header %}
+        <header class="bg-white shadow-sm">
+            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+                <h1 class="text-lg leading-6 font-semibold text-gray-900">{% block sub_title %}{% endblock %}</h1>
+            </div>
+        </header>
+        {% endblock %}
+        <main>
+            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+                {% block main %}
+                {% endblock %}
+            </div>
+        </main>
+        {% block footer %}
+        <footer>
+            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+                <div class="border-t border-gray-200 py-8 text-sm text-gray-500 text-center sm:text-left"><span class="block sm:inline">&copy; S.O.C. e.V.</span> <span class="block sm:inline">All rights reserved.</span></div>
+            </div>
+        </footer>
+        {% endblock %}
+    </div>
+
+{% endblock %}

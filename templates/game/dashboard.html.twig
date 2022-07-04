@@ -1,0 +1,21 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block sub_title %}Dashboard{% endblock %}
+
+{% block main %}
+<div class="grid grid-cols-1 gap-4 items-start lg:grid-cols-3 lg:gap-8">
+    <!-- Left column -->
+    <div class="grid grid-cols-1 gap-4 lg:col-span-2 px-4 py-6 sm:px-0">
+
+    </div>
+
+    <!-- Right column -->
+    <div class="grid grid-cols-1 gap-4 px-4 py-6 sm:px-0">
+        {% include 'game/_table.html.twig' %}
+
+        {% include 'game/_news.html.twig' %}
+    </div>
+</div>
+{% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Team;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,13 +41,13 @@ class TeamRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Team[] Returns an array of Team objects
+//     * @return Team[]
 //     */
-//    public function findByExampleField($value): array
+//    public function findByUser(User $user): array
 //    {
 //        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
+//            ->andWhere('t.user = :val')
+//            ->setParameter('val', $user)
 //            ->orderBy('t.id', 'ASC')
 //            ->setMaxResults(10)
 //            ->getQuery()

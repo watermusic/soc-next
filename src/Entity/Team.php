@@ -6,6 +6,7 @@ use App\Repository\TeamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
 #[ORM\Table(name: 'soc_team')]
@@ -140,6 +141,18 @@ class Team
         }
 
         return $this;
+    }
+
+    public function getStorageKey(): string
+    {
+        $slugger = new AsciiSlugger();
+
+        return 'teams/'.$slugger->slug(mb_strtolower($this->getName())).'.png';
+    }
+
+    public function getPublicThumbUrl(): string
+    {
+        return '/images/'.$this->getStorageKey();
     }
 
     public function __toString(): string
