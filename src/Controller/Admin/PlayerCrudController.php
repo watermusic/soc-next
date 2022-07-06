@@ -41,7 +41,7 @@ class PlayerCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield ImageField::new('thumbUrl')
-            ->setBasePath('images/player/trans')
+            ->setBasePath('images/player')
             ->hideOnForm();
         yield TextField::new('name');
         yield MoneyField::new('signingFee')->setCurrency('EUR')->setStoredAsCents();

@@ -203,11 +203,11 @@ class Player
 
     public function getStorageKey(): string
     {
-        return 'player/trans/'.$this->getExternalId().'.png';
+        return 'player/origin/'.$this->getExternalId().'.png';
     }
 
     public function getPublicThumbUrl(): string
     {
-        return '/images/'.$this->getStorageKey();
+        return 'player/'.$this->getExternalId().'.png';
     }
 }
