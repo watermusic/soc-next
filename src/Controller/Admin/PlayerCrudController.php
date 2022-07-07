@@ -42,7 +42,7 @@ class PlayerCrudController extends AbstractCrudController
     {
         yield ImageField::new('thumbUrl')
             ->setBasePath('images/player')
-            ->hideOnForm();
+            ->onlyOnIndex();
         yield TextField::new('name');
         yield MoneyField::new('signingFee')->setCurrency('EUR')->setStoredAsCents();
         yield MoneyField::new('marketValue')->setCurrency('EUR')->setStoredAsCents();

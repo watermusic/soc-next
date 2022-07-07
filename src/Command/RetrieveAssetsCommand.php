@@ -48,22 +48,21 @@ class RetrieveAssetsCommand extends Command
 
         $io->success('Start downloading player & team assets...');
 
-        $this->storeTeamAssets($output);
+        $this->storeTeamAssets($io);
 
-        $this->storePlayerAssets($output);
+        $this->storePlayerAssets($io);
 
         $io->success('...done.');
 
         return Command::SUCCESS;
     }
 
-    private function storePlayerAssets(OutputInterface $output): void
+    private function storePlayerAssets(SymfonyStyle $io): void
     {
         $players = $this->playerRepository->findAll();
 
-        $progressBar = new ProgressBar($output, count($players));
-
-        $output->writeln('Store player assets');
+        $progressBar = $io->createProgressBar(count($players));
+        $progressBar->setMessage('Store player assets');
 
         foreach ($players as $player) {
             if ($this->filesystemMap->get('public_images')->has($player->getStorageKey())) {
@@ -73,21 +72,24 @@ class RetrieveAssetsCommand extends Command
             }
 
             $crawler = new Crawler(file_get_contents($player->getExternalDetailsUrl()));
-            $imgNode = $crawler->filter('#ctl00_PlaceHolderContent_ctrlSpielerSteckbrief_ImgSpieler');
+            $imgNode = $crawler->filter('.kick__clip-sechseck.kick__clip-shadow img');
 
-            $imgUrl = $imgNode->extract(['src'])[0];
+            if ($imgNode->count() === 0) {
+                continue;
+            }
+
+            $imgUrl = str_replace('https://derivates.kicker.de/image/fetch/w_150,h_176,c_fill,g_auto,q_auto:best/', '', $imgNode->extract(['src'])[0]);
 
             $this->filesystemMap->get('public_images')->write($player->getStorageKey(), file_get_contents($imgUrl), true);
 
             $progressBar->advance();
 
-            $progressBar->finish();
-
-            $output->writeln('.');
         }
+        $progressBar->finish();
+        $io->writeln('.');
     }
 
-    private function storeTeamAssets(OutputInterface $output): void
+    private function storeTeamAssets(SymfonyStyle $io): void
     {
         $urlKickerTeams = 'https://www.kicker.de/bundesliga/vereine';
 
@@ -95,9 +97,8 @@ class RetrieveAssetsCommand extends Command
 
         $images = $crawler->filter('.kick__table .kick__table--ranking__teamicon :not(.kick__table--ranking__img-wrapper) img');
 
-        $output->writeln('Team assets');
-
-        $progressBar = new ProgressBar($output, count($images));
+        $progressBar = $io->createProgressBar(count($images));
+        $progressBar->setMessage('Store team assets');
 
         foreach ($images as $image) {
             $team = $this->guessTeamName($image->attributes->getNamedItem('alt')->textContent);
@@ -116,7 +117,7 @@ class RetrieveAssetsCommand extends Command
 
         $progressBar->finish();
 
-        $output->writeln('');
+        $io->writeln('');
     }
 
     private function guessTeamName($name): Team

@@ -52,6 +52,9 @@ class Player
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $externalDetailsUrl;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $externalSlug;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -201,13 +204,26 @@ class Player
         return $this;
     }
 
+    public function getExternalSlug(): ?string
+    {
+        return $this->externalSlug;
+    }
+
+    public function setExternalSlug(?string $externalSlug): self
+    {
+        $this->externalSlug = $externalSlug;
+
+        return $this;
+    }
+
     public function getStorageKey(): string
     {
-        return 'player/origin/'.$this->getExternalId().'.png';
+        return 'player/origin/'.$this->getExternalSlug().'.png';
     }
 
     public function getPublicThumbUrl(): string
     {
-        return '/images/player/'.$this->getExternalId().'.png';
+        return '/images/player/'.$this->getExternalSlug().'.png';
     }
+
 }

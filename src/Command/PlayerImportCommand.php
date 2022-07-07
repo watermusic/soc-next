@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection DisconnectedForeachInstructionInspection */
 
 namespace App\Command;
 
@@ -47,8 +47,7 @@ class PlayerImportCommand extends Command
     Options:
     - clear
 EOT
-            )
-            ;
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -78,11 +77,11 @@ EOT
     {
         $om = $this->doctrine->getManager();
 
-        $teamRepo = $om->getRepository(Team::class);
-        $teams = $teamRepo->findAll();
-
         $positionRepo = $om->getRepository(Position::class);
         $positions = $positionRepo->findAll();
+
+        $teamRepo = $om->getRepository(Team::class);
+        $teams = $teamRepo->findAll();
 
         $playerRepo = $om->getRepository(Player::class);
 
@@ -91,22 +90,23 @@ EOT
         $playersUpdated = 0;
         $playersCreated = 0;
 
-        foreach ($positions as $position) {
-            $players = $this->kickerProvider->getPlayersByPosition($position);
+        $teamsKicker = $this->kickerProvider->getTeams();
+
+        $io->writeln('Update players');
+
+        foreach ($teamsKicker as $team) {
+            $players = $this->kickerProvider->getPlayersByTeam($team['name']);
+
+            $io->writeln($team['name']);
+
+            $progressBar = $io->createProgressBar(count($players));
 
             foreach ($players as $player) {
-                $t = null;
-                foreach ($teams as $team) {
-                    /** @var Team $team */
-                    if ($team->getName() === $player['team']) {
-                        $t = $team;
-                    }
-                }
 
-                $player['externalId'] = (int) $player['externalId'];
+                $progressBar->advance();
 
                 if ($playersCollection->exists(function ($key, $element) use ($player) {
-                    return $element->getExternalId() === $player['externalId'];
+                    return $element->getName() === $player['name'];
                 })) {
                     ++$playersUpdated;
 
@@ -116,51 +116,94 @@ EOT
                 $entity = new Player();
                 $entity
                     ->setName($player['name'])
-                    ->setTeam($t)
+                    ->setTeam($this->findTeamByName($teams, $team['name']))
                     ->setAverageGrade($player['averageGrade'])
                     ->setSigningFee(0.0)
                     ->setMarketValue($player['marketValue'])
-                    ->setPosition($position)
-                    ->setExternalDetailsUrl('https://manager.kicker.de'.$player['externalDetailsUrl'])
+                    ->setPosition($this->findPositionByName($positions, $player['position']))
+                    ->setExternalDetailsUrl($player['externalDetailsUrl'])
                     ->setExternalThumbUrl($player['externalThumbUrl'])
-                    ->setExternalId($player['externalId'])
-                    ->setThumbUrl($player['externalId'].'.png')
+                    ->setExternalId(1)
+                    ->setExternalSlug($player['slug'])
+                    ->setThumbUrl($player['slug'].'.png')
                     ->setAverageScore($player['averageScore']);
 
                 $om->persist($entity);
-
                 ++$playersCreated;
             }
-            $om->flush();
+            $progressBar->finish();
+            $io->writeln("");
         }
+
+        $om->flush();
 
         $io->success("#$playersCreated Players have been created");
         $io->success("#$playersUpdated Players have been updated");
     }
 
+    /**
+     * @param Team[] $teams
+     * @param string $name
+     * @return Team|null
+     */
+    private function findTeamByName(array $teams, string $name): ?Team
+    {
+        foreach ($teams as $team) {
+            if ($team->getName() === $name) {
+                return $team;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Position[] $positionen
+     * @param string $name
+     * @return Position|null
+     */
+    private function findPositionByName(array $positionen, string $name): ?Position
+    {
+        foreach ($positionen as $position) {
+            if ($position->getName() === $name) {
+                return $position;
+            }
+        }
+
+        return null;
+    }
+
+
+
     private function updateTeams(SymfonyStyle $io): void
     {
         $om = $this->doctrine->getManager();
 
-        $positionRepo = $om->getRepository(Position::class);
-        $positions = $positionRepo->findAll();
+        $teamRepo = $om->getRepository(Team::class);
+        $teamsCollection = new ArrayCollection($teamRepo->findAll());
 
-        $players = $this->kickerProvider->getPlayersByPosition($positions[0]->getName());
+        $teams = $this->kickerProvider->getTeams();
 
-        $vereine = [];
-        foreach ($players as $player) {
-            if (!in_array($player['team'], $vereine, true)) {
-                $vereine[] = $player['team'];
+        asort($teams);
+
+        $io->writeln('Update teams');
+
+        $progressBar = $io->createProgressBar(count($teams));
+
+        foreach ($teams as $team) {
+            $progressBar->advance();
+
+            if ($teamsCollection->exists(function ($key, $element) use ($team) {
+                return $element->getName() === $team['name'];
+            })) {
+                continue;
             }
-        }
 
-        asort($vereine);
-
-        foreach ($vereine as $verein) {
-            $team = new Team();
-            $team->setName($verein);
-            $om->persist($team);
+            $entity = new Team();
+            $entity->setName($team['name']);
+            $om->persist($entity);
         }
+        $progressBar->finish();
         $om->flush();
 
         $io->success('Teams have been updated');
