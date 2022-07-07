@@ -20,12 +20,12 @@ final class Version20220623161009 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE player CHANGE signing_fee signing_fee BIGINT DEFAULT NULL');
+        $this->addSql('ALTER TABLE soc_player CHANGE signing_fee signing_fee BIGINT DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE player CHANGE signing_fee signing_fee INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE soc_player CHANGE signing_fee signing_fee INT DEFAULT NULL');
     }
 }
