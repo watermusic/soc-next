@@ -208,6 +208,6 @@ class Player
 
     public function getPublicThumbUrl(): string
     {
-        return 'player/'.$this->getExternalId().'.png';
+        return '/images/player/'.$this->getExternalId().'.png';
     }
 }
