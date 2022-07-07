@@ -49,7 +49,7 @@ class PlayerRepository extends ServiceEntityRepository
             ->andWhere('p.user = :val')
             ->setParameter('val', $user)
             ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+            ->setMaxResults(50)
             ->getQuery()
             ->getResult()
         ;

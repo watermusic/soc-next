@@ -40,8 +40,25 @@ class GameController extends AbstractController
 
         $players = $this->playerRepository->findByUser($user);
 
+        $moneySpend = 0;
+        $budget = 60000000;
+        $playersNeeded = 24;
+
+        foreach ($players as $player) {
+            $moneySpend += $player->getSigningFee() / 100;
+        }
+
+        $moneyLeft = $budget - $moneySpend;
+        $playersLeft = $playersNeeded - count($players);
+        $moneyPerPlayerLeft = ($playersLeft < 0) ? 0 : $moneyLeft / $playersLeft;
+
         return $this->render('game/team.html.twig', [
             'players' => $players,
+            'playersNeeded' => $playersNeeded,
+            'budget' => $budget,
+            'moneySpend' => $moneySpend,
+            'moneyLeft' => $moneyLeft,
+            'moneyPerPlayerLeft' => $moneyPerPlayerLeft,
         ]);
     }
 
