@@ -1,0 +1,1 @@
+(self.webpackChunk=self.webpackChunk||[]).push([[143],{144:(e,c,n)=>{"use strict";n(12)},12:()=>{var e=document.querySelector('[aria-controls="mobile-menu"]');e&&e.addEventListener("click",(function(e){document.querySelector("#mobile-menu").classList.toggle("hidden")}))}},e=>{var c;c=144,e(e.s=c)}]);
