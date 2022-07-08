@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Player;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -26,6 +28,14 @@ class PlayerCrudController extends AbstractCrudController
         return $crud
             ->setPaginatorPageSize(600)
             ->setSearchFields(['name', 'position.name', 'team.name', 'user.name'])
+            ->showEntityActionsInlined()
+            ;
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->disable(Action::DELETE)
             ;
     }
 
@@ -45,9 +55,9 @@ class PlayerCrudController extends AbstractCrudController
             ->onlyOnIndex();
         yield TextField::new('name');
         yield MoneyField::new('signingFee')->setCurrency('EUR');
-        yield MoneyField::new('marketValue')->setCurrency('EUR');
-        yield NumberField::new('averageGrade', 'Note');
-        yield NumberField::new('averageScore', 'Punkte');
+        //yield MoneyField::new('marketValue')->setCurrency('EUR');
+        //yield NumberField::new('averageGrade', 'Note');
+        //yield NumberField::new('averageScore', 'Punkte');
         yield AssociationField::new('position');
         yield AssociationField::new('user');
         yield AssociationField::new('team');
