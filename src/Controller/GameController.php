@@ -50,7 +50,7 @@ class GameController extends AbstractController
 
         $moneyLeft = $budget - $moneySpend;
         $playersLeft = $playersNeeded - count($players);
-        $moneyPerPlayerLeft = ($playersLeft < 0) ? 0 : $moneyLeft / $playersLeft;
+        $moneyPerPlayerLeft = ($playersLeft <= 0) ? 0 : $moneyLeft / $playersLeft;
 
         return $this->render('game/team.html.twig', [
             'players' => $players,
