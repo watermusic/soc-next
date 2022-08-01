@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Player;
 use App\Entity\Position;
+use App\Entity\Score;
 use App\Entity\Team;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -44,13 +45,16 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Soc Next');
+            ->setTitle('S.O.C. Next')
+            ->setFaviconPath('/favicons/favicon.svg')
+            ;
     }
 
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToRoute('zurück zum Spiel', 'fa fa-home', 'app_game_dashboard');
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToCrud('Punkte', 'fas fa-user', Score::class);
         yield MenuItem::linkToCrud('User', 'fas fa-user', User::class);
         yield MenuItem::linkToCrud('Spieler', 'fas fa-user', Player::class);
         yield MenuItem::linkToCrud('Positionen', 'fas fa-user', Position::class);

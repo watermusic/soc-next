@@ -6,22 +6,31 @@
             </div>
             <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-4">
-                    <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                    <a href="{{ path('app_game_dashboard') }}" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
-                       aria-current="page">Dashboard</a>
+
+                    <a href="{{ path('app_game_dashboard') }}"
+                       class="{% if app.request.get('_route') == 'app_game_dashboard' %} bg-gray-900 text-white {% else %} text-gray-300 hover:bg-gray-700 hover:text-white{% endif %} px-3 py-2 rounded-md text-sm font-medium">
+                        Dashboard
+                    </a>
 
                     <a href="{{ path('app_game_lineup') }}"
-                       class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Aufstellung</a>
+                       class="{% if app.request.get('_route') == 'app_game_lineup' %} bg-gray-900 text-white {% else %} text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}e px-3 py-2 rounded-md text-sm font-medium">
+                        Aufstellung
+                    </a>
 
                     <a href="{{ path('app_game_team') }}"
-                       class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Mein
-                        Team</a>
+                       class="{% if app.request.get('_route') == 'app_game_team' %} bg-gray-900 text-white {% else %} text-gray-300 hover:bg-gray-700 hover:text-white{% endif %} px-3 py-2 rounded-md text-sm font-medium">
+                        Mein Team
+                    </a>
 
                     <a href="{{ path('app_game_standings') }}"
-                       class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Übersicht</a>
+                       class="{% if app.request.get('_route') == 'app_game_standings' %} bg-gray-900 text-white {% else %} text-gray-300 hover:bg-gray-700 hover:text-white{% endif %} px-3 py-2 rounded-md text-sm font-medium">
+                        Übersicht
+                    </a>
 
                     <a href="{{ path('admin') }}"
-                       class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Versteigerung</a>
+                       class="{% if app.request.get('_route') == 'admin' %} bg-gray-900 text-white {% else %} text-gray-300 hover:bg-gray-700 hover:text-white{% endif %} px-3 py-2 rounded-md text-sm font-medium">
+                        Versteigerung
+                    </a>
                 </div>
             </div>
         </div>

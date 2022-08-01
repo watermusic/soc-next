@@ -48,7 +48,7 @@ class PlayerRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('p')
             ->andWhere('p.user = :val')
             ->setParameter('val', $user)
-            ->orderBy('p.id', 'ASC')
+            ->orderBy('p.position', 'ASC')
             ->setMaxResults(50)
             ->getQuery()
             ->getResult()

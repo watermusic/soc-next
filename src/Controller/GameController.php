@@ -65,14 +65,14 @@ class GameController extends AbstractController
     #[Route('/game/lineup', name: 'app_game_lineup')]
     public function lineup(): Response
     {
-        return $this->render('game/team.html.twig', [
+        return $this->render('game/lineup.html.twig', [
         ]);
     }
 
     #[Route('/game/standings', name: 'app_game_standings')]
     public function standings(): Response
     {
-        return $this->render('game/team.html.twig', [
+        return $this->render('game/standings.html.twig', [
         ]);
     }
 }
