@@ -4,6 +4,20 @@
 
 {% block sub_title %}Meine Aufstellung{% endblock %}
 
-{% block main %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+    {{ encore_entry_link_tags('lineup') }}
+{% endblock %}
 
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('lineup') }}
+{% endblock %}
+
+{% block main %}
+    <div id="app" class="h-full" style="height: calc(100% - 120px)"></div>
+{% endblock %}
+
+{% block footer %}
+<footer></footer>
 {% endblock %}

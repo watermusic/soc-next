@@ -3,7 +3,7 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
-    <div class="min-h-full">
+    <div class="h-full">
         <nav class="bg-gray-800">
             {% include '_nav.html.twig' %}
         </nav>
@@ -15,12 +15,14 @@
             </div>
         </header>
         {% endblock %}
+        {% block main %}
         <main>
             <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-                {% block main %}
+                {% block main_content %}
                 {% endblock %}
             </div>
         </main>
+        {% endblock %}
         {% block footer %}
         <footer>
             <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
