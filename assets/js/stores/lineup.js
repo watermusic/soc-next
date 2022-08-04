@@ -17,12 +17,19 @@ export const useLineupStore = defineStore('lineup', () => {
 
     const saving = ref(false);
 
+    const isSaved = ref(false);
+
     const errors = ref(null);
 
     /**
      * @type {lineUp[]}
      */
     const lineups = ref([]);
+
+    /**
+     * @type {lineUp}
+     */
+    const lastSavedLineup = ref({});
 
     async function hydrate() {
         lineups.value = [];
@@ -43,16 +50,18 @@ export const useLineupStore = defineStore('lineup', () => {
      */
     async function createOrUpdateLineup(lineUp) {
         saving.value = true;
+        isSaved.value = false;
         try {
-            const persistedLineup = await fetch('/api/lineups', {
+            const response = await fetch('/api/lineups', {
                 method: 'POST',
                 cache: 'no-cache',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(lineUp)
-            })
-                .then((response) => response.json());
+            });
+            lastSavedLineup.value = await response.json();
+            isSaved.value = true;
         } catch (err) {
             errors.value = err;
         } finally {
@@ -72,6 +81,7 @@ export const useLineupStore = defineStore('lineup', () => {
         initialized,
         loading,
         saving,
+        isSaved,
         errors,
         lineups,
         hydrate,

@@ -9,7 +9,7 @@
       <Pitch/>
     </div>
 
-    <div class="bench flex h-44">
+    <div class="bench flex" style="height: 11.75rem;">
       <Bench/>
     </div>
 

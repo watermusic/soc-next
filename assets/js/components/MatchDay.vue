@@ -2,7 +2,17 @@
   <p v-if="lineupStore.loading">Loading lineups...</p>
   <p v-if="lineupStore.error">{{ error.message }}</p>
   <div v-if="! lineupStore.loading" class="flex items-center justify-between w-full px-3">
-    <div class="flex-1"></div>
+    <div class="flex-1 flex justify-start">
+      <a
+          :href="printUrl"
+          target="_blank"
+          class="inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-white bg-white hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+      </a>
+    </div>
     <Listbox class="w-32" v-model="selectedMatchDay">
       <div class="relative">
         <ListboxButton
@@ -72,7 +82,7 @@
 </template>
 
 <script setup>
-  import { ref, watch, onMounted } from 'vue'
+  import { ref, watch, computed } from 'vue'
   import {
     Listbox,
     ListboxButton,
@@ -82,9 +92,13 @@
   import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
   import { useLineupStore } from "@/stores/lineup";
   import { usePlayerStore } from "@/stores/player";
+  import { useToast } from "vue-toastification";
 
+
+  const toast = useToast();
   const lineupStore = useLineupStore()
   const playerStore = usePlayerStore()
+
 
   const matchDays = [
     { id: 1, name: '1. Spieltag', unavailable: false },
@@ -96,10 +110,16 @@
 
   const selectedMatchDay = ref(matchDays[0])
 
+  const printUrl = computed(() => {
+    return `/lineup/${selectedMatchDay.value.id}/print.pdf`;
+  });
+
   const loadLineupByMatchday = (matchday) => {
     const lineUp = lineupStore.getLineUpByMatchday(matchday.id);
 
     playerStore.movePlayerToPitchFromLineup(lineUp);
+
+    return lineUp;
   }
 
   const createLineup = () => {
@@ -109,7 +129,7 @@
     };
 
     if (lineup.data.length !== 11) {
-      alert('Du musst alle 11 Positionen aufstellen.');
+      toast.warning('Du musst alle 11 Spieler aufstellen.');
 
       return;
     }
@@ -117,20 +137,32 @@
     lineupStore.createOrUpdateLineup(lineup);
   }
 
-  // lineupStore.$subscribe((mutation, state) => {
-  //   if (true === state.initialized) {
-  //     loadLineupByMatchday(selectedMatchDay.value);
-  //   }
-  // })
-
-
   setTimeout(() => {
-    console.log(selectedMatchDay.value);
     loadLineupByMatchday(selectedMatchDay.value);
   }, 2000)
 
   watch(selectedMatchDay, async(matchday) => {
-    loadLineupByMatchday(matchday);
+    if(! loadLineupByMatchday(matchday)) {
+      toast.warning('Für diesen Spieltag hast du noch keine Aufstellung abgegeben.');
+    }
+  })
+
+  let isCalled = 0;
+
+  // isSaved is triggered twice, so we have to count the calls
+  lineupStore.$subscribe((mutation, state) => {
+
+    if (state.isSaved === true) {
+      ++isCalled;
+
+      if (isCalled === 1) {
+        toast.success('Die Aufstellung wurde erfolgreich gespeichert!.');
+      }
+
+      if (isCalled > 1) {
+        isCalled = 0;
+      }
+    }
   })
 
 </script>

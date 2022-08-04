@@ -1,0 +1,226 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+    <style>
+        body {
+            background: transparent !important;
+            color: #000 !important;
+            width: 1485px;
+            height: 1050px;
+        }
+        .wrapper {
+            margin: 0 20px;
+        }
+        .users {
+            padding: 0;
+            overflow: hidden;
+        }
+        .user {
+            width: 33%;
+            float: left;
+            padding: 0 50px 0 0;
+            margin-bottom: 10px;
+        }
+        .user .username {
+            /*margin-left: 50%;*/
+            text-align: left;
+        }
+        .user .username span {
+            font-size: 16px;
+        }
+        .user .player-name {
+            width: 28%;
+            text-align: left;
+        }
+        .dTable{
+            display: table;
+            width: 100%;
+        }
+        .dTableRow {
+            display: table-row;
+        }
+        .dTableHeading {
+            display: table-header-group;
+        }
+
+        .player-name {
+            width: 28%;
+        }
+
+        .dTableCell, .dTableHead {
+            display: table-cell;
+            width: 9%;
+            padding: 9px 4px;
+            text-align: center;
+        }
+
+        .dTableHead.icon {
+            padding: 8px 4px 4px;
+            text-align: center;
+            vertical-align: bottom;
+        }
+
+        .dTableCell {
+            border-right: 1px dashed #999999;
+        }
+
+        .dTableCell:first-child {
+            background-size: 50%;
+            padding: 0;
+            background-repeat: no-repeat;
+            background-position: 2px 4px;
+        }
+
+        .dTableHeading {
+            display: table-header-group;
+        }
+        .dTableBody {
+            display: table-row-group;
+        }
+
+        .dTableStriped > .dTableBody > .dTableRow:nth-of-type(odd) {
+            background-color: #D9D9D9;
+        }
+
+        .dTableCell .num {
+            display: block;
+            background-color: white;
+            opacity: 0.75;
+            padding: 8px 2px 8px 15px;
+        }
+
+        .dTableCell.team {
+            background-size: contain;
+        }
+
+        .dTableCell.augsburg {
+            background-image: url(/images/teams/augsburg.png);
+        }
+        .dTableCell.bayern {
+            background-image: url(/images/teams/bayern.png);
+        }
+        .dTableCell.bremen {
+            background-image: url(/images/teams/bremen.png);
+        }
+        .dTableCell.darmstadt {
+            background-image: url(/images/teams/darmstadt.png);
+        }
+        .dTableCell.dortmund {
+            background-image: url(/images/teams/dortmund.png);
+        }
+        .dTableCell.frankfurt {
+            background-image: url(/images/teams/frankfurt.png);
+        }
+        .dTableCell.gladbach {
+            background-image: url(/images/teams/gladbach.png);
+        }
+        .dTableCell.hamburg {
+            background-image: url(/images/teams/hamburg.png);
+        }
+        .dTableCell.hannover {
+            background-image: url(/images/teams/hannover.png);
+        }
+        .dTableCell.hertha {
+            background-image: url(/images/teams/hertha.png);
+        }
+        .dTableCell.hoffenheim {
+            background-image: url(/images/teams/hoffenheim.png);
+        }
+        .dTableCell.ingolstadt {
+            background-image: url(/images/teams/ingolstadt.png);
+        }
+        .dTableCell.köln {
+            background-image: url(/images/teams/köln.png);
+        }
+        .dTableCell.leipzig {
+            background-image: url(/images/teams/leipzig.png);
+        }
+        .dTableCell.leverkusen {
+            background-image: url(/images/teams/leverkusen.png);
+        }
+        .dTableCell.mainz {
+            background-image: url(/images/teams/mainz.png);
+        }
+        .dTableCell.schalke {
+            background-image: url(/images/teams/schalke.png);
+        }
+        .dTableCell.stuttgart {
+            background-image: url(/images/teams/stuttgart.png);
+        }
+        .dTableCell.wolfsburg {
+            background-image: url(/images/teams/wolfsburg.png);
+        }
+
+        .dTableFoot .dTableCell {
+            font-size: 10px;
+            padding: 2px;
+        }
+
+        .date {
+            text-align: right;
+        }
+
+    </style>
+
+    <h2>{{ matchday }}. Spieltag</h2>
+
+    <div class="wrapper">
+
+        <div class="col-lg-12">
+
+            <ul class="unstyled users">
+
+                {% for username, lineup in lineups %}
+
+                    <li class="user">
+                        <div class="dTable dTableStriped">
+                            <div class="dTableHeading">
+                                <div class="dTableRow">
+                                    <div class="dTableHead">&nbsp;</div>
+                                    <div class="dTableHead username"><span>{{ username|title }}</span></div>
+                                    <div class="dTableHead icon"><img src="{{ asset('images/misc/lu-award.png') }}" style="width: 27px; height: 27px;"/></div>
+                                    <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-note.png') }}" style="width: 27px; height: 27px;"/></div>
+                                    <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-assist.png') }}" style="width: 27px; height: 27px;"/></div>
+                                    <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-goal.png') }}" style="width: 27px; height: 27px;"/></div>
+                                    <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-goal-against.png') }}" style="width: 27px; height: 27px;"/></div>
+                                    <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-cards.png') }}" style="width: 27px; height: 27px;"/></div>
+                                    <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-startlineup.png') }}" style="width: 27px; height: 27px;"/></div>
+                                </div>
+                            </div>
+                            <div class="dTableBody">
+                                {% for i in 1..11 %}
+                                    {% set player = lineup.players[i]|default({'name':'', 'team':{'name':''}}) %}
+                                    <div class="dTableRow">
+                                        <div class="dTableCell team {{ player.team.name|lower }}"><span class="num">{{ loop.index }}</span></div>
+                                        <div class="dTableCell player-name">{{ player.name }}</div>
+                                        <div class="dTableCell">&nbsp;</div>
+                                        <div class="dTableCell">&nbsp;</div>
+                                        <div class="dTableCell">&nbsp;</div>
+                                        <div class="dTableCell">&nbsp;</div>
+                                        <div class="dTableCell">&nbsp;</div>
+                                        <div class="dTableCell">&nbsp;</div>
+                                        <div class="dTableCell">&nbsp;</div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="date">
+                            {% if lineup.lineup %}
+                                <i>{{ lineup.lineup.updatedAt|date('d.m.Y h:i') }}</i>
+                            {% endif %}
+                            &nbsp;
+                        </div>
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+{% endblock %}

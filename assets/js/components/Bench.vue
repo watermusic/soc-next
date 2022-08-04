@@ -80,7 +80,7 @@ const store = usePlayerStore()
 store.hydrate();
 
 const categories = ref({
-  'all': { getter: store.getPlayersOnBench, label: 'Alle Positionen' },
+  'all': { getter: store.getPlayersOnBench, label: 'Bank (scroll rechts)' },
   // 'TW': { getter: store.getPlayersOnBench, label: 'Torwart' },
   // 'AB': { getter: store.getPlayersOnBench, label: 'Abwehr' },
   // 'MF': { getter: store.getPlayersOnBench, label: 'Mittelfeld' },
