@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Team;
-use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Team>
@@ -40,20 +40,20 @@ class TeamRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Team[]
-//     */
-//    public function findByUser(User $user): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.user = :val')
-//            ->setParameter('val', $user)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return Team[]
+     */
+    public function findByUser(UserInterface $user): array
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.user = :val')
+            ->setParameter('val', $user)
+            ->orderBy('t.id', 'ASC')
+            ->setMaxResults(40)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?Team
 //    {

@@ -14,89 +14,52 @@
       </svg>
 
       <div class="players absolute left-0 top-0 w-full h-full">
-        <div class="player absolute w-14 h-14 -ml-7 p-1 rounded-full bg-black bg-opacity-10 " v-for="position in positions" :key="position.num" :style="'left: ' + position.x + '%; bottom: ' + position.y + '%'">
-          <div class="w-full h-full rounded-full border-2 border-opacity-75
-<!--          border-blue-400 -->
-          border-white
-          ">
-            <div class="w-full h-full flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white opacity-75" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-              </svg>
+        <div
+            @click="store.markPosition(position.num)"
+            class="player absolute w-16 h-16 -ml-7 flex items-center justify-center cursor-pointer"
+            v-for="position in positions"
+            :key="position.num"
+            :style="'left: ' + position.x + '%; bottom: ' + position.y + '%'"
+            :set="player = store.getPlayerOnPitchByPosition(position.num)"
+        >
+            <div
+                v-if="player !== null"
+                class="bg-white flex h-full items-center justify-center rounded-full w-full border-4"
+                :class="getClassByPosition(position.num)"
+            >
+              <div class="absolute w-full h-full opacity-25" :style="'background-image: url(' + player.team.img + '); opacity: 0.1; background-size: cover;'"></div>
+              <img :src="player.img"  :alt="player.name" class="absolute h-full rounded-full w-auto"/>
+              <span v-text="player.name" class="text-white absolute block text-xs" style="bottom: -1rem; text-shadow: 1px 1px 2px black"></span>
             </div>
-          </div>
+
+            <div v-else class="w-14 h-14 p-1 rounded-full bg-black bg-opacity-10">
+              <div
+                  class="w-full h-full rounded-full border-4 border-opacity-75 hover:border-blue-300"
+                  :class="getClassByPosition(position.num)">
+                <div class="w-full h-full flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white opacity-75" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
         </div>
       </div>
     </div>
 </template>
 
 <script setup>
-  const positions = [
-    {
-      x: 50,
-      y: 5,
-      num: 1,
-      player: null,
-    },
-    {
-      x: 25,
-      y: 25,
-      num: 2,
-      player: null,
-    },
-    {
-      x: 50,
-      y: 20,
-      num: 3,
-      player: null,
-    },
-    {
-      x: 75,
-      y: 25,
-      num: 4,
-      player: null,
-    },
-    {
-      x: 39,
-      y: 41,
-      num: 5,
-      player: null,
-    },
-    {
-      x: 61,
-      y: 41,
-      num: 6,
-      player: null,
-    },
-    {
-      x: 20,
-      y: 59,
-      num: 7,
-      player: null,
-    },
-    {
-      x: 50,
-      y: 65,
-      num: 8,
-      player: null,
-    },
-    {
-      x: 80,
-      y: 59,
-      num: 9,
-      player: null,
-    },
-    {
-      x: 28.5,
-      y: 78,
-      num: 10,
-      player: null,
-    },
-    {
-      x: 70.5,
-      y: 78,
-      num: 11,
-      player: null,
-    }
-  ];
+  import { PITCH_POSITIONS } from "@/common/constants";
+  import { usePlayerStore } from "@/stores/player";
+  import {storeToRefs} from "pinia/dist/pinia";
+
+  const { players, loading, error } = storeToRefs(usePlayerStore())
+  const store = usePlayerStore()
+
+  const getClassByPosition = (num) => {
+    return store.isMarkedPosition(num) ? 'border-blue-400' : 'border-white';
+  }
+
+  const positions = PITCH_POSITIONS;
 </script>

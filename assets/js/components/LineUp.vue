@@ -1,5 +1,5 @@
 <template>
-  <div class="lineup flex flex-col justify-between h-full">
+  <div class="lineup flex flex-col justify-between h-full max-w-lg m-auto">
 
     <div class="sub-header z-50 h-12 flex items-center justify-center w-full">
       <MatchDay />
@@ -20,5 +20,15 @@
   import MatchDay from "@/components/MatchDay";
   import Bench from "@/components/Bench";
   import Pitch from "@/components/Pitch";
+
+  import { useLineupStore } from "@/stores/lineup";
+  import { usePlayerStore } from "@/stores/player";
+
+  const lineupStore = useLineupStore()
+  const playerStore = usePlayerStore()
+
+  playerStore.hydrate();
+  lineupStore.hydrate();
+
 </script>
 

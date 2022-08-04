@@ -95,4 +95,31 @@ class Lineup
 
         return $this;
     }
+
+    public function serialize(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'user' => [
+                'id' => $this->getUser()->getId(),
+                'name' => $this->getUser()->getName(),
+                'email' => $this->getUser()->getEmail(),
+            ],
+            'matchday' => $this->getMatchday(),
+            'data' => $this->getData(),
+            'updated_at' => $this->getUpdatedAt(),
+            'created_at' => $this->getCreatedAt()
+        ];
+    }
+
+    public function deserialize(array $attributes): Lineup
+    {
+        $lineUp = new self();
+        $lineUp->setData($attributes['data']);
+        $lineUp->setMatchday($attributes['matchday']);
+        $lineUp->setUpdatedAt($attributes['updated_at']);
+        $lineUp->setCreatedAt($attributes['created_at']);
+
+        return $lineUp;
+    }
 }

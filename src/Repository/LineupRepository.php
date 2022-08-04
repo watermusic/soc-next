@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Lineup;
+use App\Entity\Player;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Lineup>
@@ -39,6 +42,38 @@ class LineupRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param UserInterface $user
+     * @return Lineup[]
+     */
+    public function findByUser(UserInterface $user): array
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('l.updatedAt', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findByUserAndMatchday(UserInterface $user, int $matchDay): ?Lineup
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.user = :user')
+            ->setParameter('user', $user)
+            ->andWhere('l.matchday = :matchday')
+            ->setParameter('matchday', $matchDay)
+            ->orderBy('l.updatedAt', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
 //    /**
 //     * @return Lineup[] Returns an array of Lineup objects
 //     */

@@ -1,6 +1,9 @@
 <template>
-  <div class="w-32">
-    <Listbox v-model="selectedMatchDay">
+  <p v-if="lineupStore.loading">Loading lineups...</p>
+  <p v-if="lineupStore.error">{{ error.message }}</p>
+  <div v-if="! lineupStore.loading" class="flex items-center justify-between w-full px-3">
+    <div class="flex-1"></div>
+    <Listbox class="w-32" v-model="selectedMatchDay">
       <div class="relative">
         <ListboxButton
             class="relative w-full cursor-default py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
@@ -54,11 +57,22 @@
         </transition>
       </div>
     </Listbox>
+    <div class="flex-1 flex justify-end">
+      <button
+          @click="createLineup()"
+          type="button"
+          class="inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-white bg-white hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+        </svg>
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
   import {
     Listbox,
     ListboxButton,
@@ -66,6 +80,11 @@
     ListboxOption,
   } from '@headlessui/vue'
   import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
+  import { useLineupStore } from "@/stores/lineup";
+  import { usePlayerStore } from "@/stores/player";
+
+  const lineupStore = useLineupStore()
+  const playerStore = usePlayerStore()
 
   const matchDays = [
     { id: 1, name: '1. Spieltag', unavailable: false },
@@ -74,6 +93,40 @@
     { id: 4, name: '4. Spieltag', unavailable: false },
     { id: 5, name: '5. Spieltag', unavailable: false },
   ]
+
   const selectedMatchDay = ref(matchDays[0])
+
+  const loadLineupByMatchday = (matchday) => {
+    const lineUp = lineupStore.getLineUpByMatchday(matchday.id);
+
+    playerStore.movePlayerToPitchFromLineup(lineUp);
+  }
+
+  const createLineup = () => {
+    const lineup = {
+      "matchday": selectedMatchDay.value.id,
+      "data": playerStore.getPlayersOnPitchAsLineup()
+    };
+
+    if (lineup.data.length !== 11) {
+      alert('Du musst alle 11 Positionen aufstellen.');
+
+      return;
+    }
+
+    lineupStore.createOrUpdateLineup(lineup);
+  }
+
+
+  lineupStore.$subscribe((mutation, state) => {
+    if (true === state.initialized) {
+      loadLineupByMatchday(selectedMatchDay);
+    }
+  })
+
+
+  watch(selectedMatchDay, async(matchday) => {
+    loadLineupByMatchday(matchday);
+  })
 
 </script>
