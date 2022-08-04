@@ -55,6 +55,15 @@ class Player
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $externalSlug;
 
+    public function __construct()
+    {
+        $this->marketValue = 0;
+        $this->averageGrade = 3.5;
+        $this->averageScore = 0;
+        $this->externalThumbUrl = '';
+        $this->externalId = 1;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

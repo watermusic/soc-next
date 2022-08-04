@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full flex items-center justify-center p-3 relative">
-      <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 376 493" class="h-full w-auto absolute">
+      <svg fill="none" class="h-full w-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 376 493">
         <path d="M138.023 225.788h96.973S371.512 453.964 375.09 470.679c0 1.828-2.448 6.269-4.708 7.96-29.562 20.96-312.386 17.246-365.11 0-3.55-1.803-5.272-5.895-5.272-7.96 17.889-83.178 138.023-244.891 138.023-244.891Z" fill="#23432A"/>
         <path d="M26.738 7.562c75.037-9.295 247.183-10.84 321.614 0l26.738 463.781C327.074 488.589 35.212 486.997 0 470.812L26.738 7.562Z" fill="#117928"/>
         <g clip-path="url(#a)">
@@ -16,7 +16,7 @@
       <div class="players absolute left-0 top-0 w-full h-full">
         <div
             @click="store.markPosition(position.num)"
-            class="player absolute w-16 h-16 -ml-7 flex items-center justify-center cursor-pointer"
+            class="player absolute w-14 h-14 -ml-7 flex items-center justify-center cursor-pointer"
             v-for="position in positions"
             :key="position.num"
             :style="'left: ' + position.x + '%; bottom: ' + position.y + '%'"
@@ -32,7 +32,7 @@
               <span v-text="player.name" class="text-white absolute block text-xs" style="bottom: -1rem; text-shadow: 1px 1px 2px black"></span>
             </div>
 
-            <div v-else class="w-14 h-14 p-1 rounded-full bg-black bg-opacity-10">
+            <div v-else class="w-12 h-12 p-1 rounded-full bg-black bg-opacity-10">
               <div
                   class="w-full h-full rounded-full border-4 border-opacity-75 hover:border-blue-300"
                   :class="getClassByPosition(position.num)">

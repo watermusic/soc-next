@@ -72,7 +72,7 @@
 </template>
 
 <script setup>
-  import { ref, watch } from 'vue'
+  import { ref, watch, onMounted } from 'vue'
   import {
     Listbox,
     ListboxButton,
@@ -117,13 +117,17 @@
     lineupStore.createOrUpdateLineup(lineup);
   }
 
+  // lineupStore.$subscribe((mutation, state) => {
+  //   if (true === state.initialized) {
+  //     loadLineupByMatchday(selectedMatchDay.value);
+  //   }
+  // })
 
-  lineupStore.$subscribe((mutation, state) => {
-    if (true === state.initialized) {
-      loadLineupByMatchday(selectedMatchDay);
-    }
-  })
 
+  setTimeout(() => {
+    console.log(selectedMatchDay.value);
+    loadLineupByMatchday(selectedMatchDay.value);
+  }, 2000)
 
   watch(selectedMatchDay, async(matchday) => {
     loadLineupByMatchday(matchday);

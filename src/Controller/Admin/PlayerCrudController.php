@@ -56,8 +56,10 @@ class PlayerCrudController extends AbstractCrudController
         yield TextField::new('name');
         yield MoneyField::new('signingFee')->setCurrency('EUR');
         //yield MoneyField::new('marketValue')->setCurrency('EUR');
-        //yield NumberField::new('averageGrade', 'Note');
-        //yield NumberField::new('averageScore', 'Punkte');
+//        yield NumberField::new('averageGrade', 'Note');
+//        yield NumberField::new('averageScore', 'Punkte');
+        yield TextField::new('externalDetailsUrl');
+        yield TextField::new('externalSlug');
         yield AssociationField::new('position');
         yield AssociationField::new('user');
         yield AssociationField::new('team');
