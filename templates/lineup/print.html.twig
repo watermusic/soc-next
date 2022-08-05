@@ -2,13 +2,16 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block javascripts %}
+{% endblock %}
+
 {% block body %}
     <style>
         body {
             background: transparent !important;
             color: #000 !important;
-            width: 1485px;
-            height: 1050px;
+            width: 1485px !important;
+            height: 1050px !important;
         }
         .wrapper {
             margin: 0 20px;
@@ -21,7 +24,7 @@
             width: 33%;
             float: left;
             padding: 0 50px 0 0;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
         .user .username {
             /*margin-left: 50%;*/
@@ -52,7 +55,7 @@
         .dTableCell, .dTableHead {
             display: table-cell;
             width: 9%;
-            padding: 9px 4px;
+            padding: 7px 4px;
             text-align: center;
         }
 
@@ -168,57 +171,53 @@
 
     <div class="wrapper">
 
-        <div class="col-lg-12">
+        <ul class="users">
 
-            <ul class="unstyled users">
+            {% for username, lineup in lineups %}
 
-                {% for username, lineup in lineups %}
-
-                    <li class="user">
-                        <div class="dTable dTableStriped">
-                            <div class="dTableHeading">
+                <li class="user">
+                    <div class="dTable dTableStriped">
+                        <div class="dTableHeading">
+                            <div class="dTableRow">
+                                <div class="dTableHead">&nbsp;</div>
+                                <div class="dTableHead username"><span>{{ username|title }}</span></div>
+                                <div class="dTableHead icon"><img src="{{ asset('images/misc/lu-award.png') }}" style="width: 27px; height: 27px;"/></div>
+                                <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-note.png') }}" style="width: 27px; height: 27px;"/></div>
+                                <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-assist.png') }}" style="width: 27px; height: 27px;"/></div>
+                                <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-goal.png') }}" style="width: 27px; height: 27px;"/></div>
+                                <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-goal-against.png') }}" style="width: 27px; height: 27px;"/></div>
+                                <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-cards.png') }}" style="width: 27px; height: 27px;"/></div>
+                                <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-startlineup.png') }}" style="width: 27px; height: 27px;"/></div>
+                            </div>
+                        </div>
+                        <div class="dTableBody">
+                            {% for i in 1..11 %}
+                                {% set player = lineup.players[i]|default({'name':'', 'team':{'name':''}}) %}
                                 <div class="dTableRow">
-                                    <div class="dTableHead">&nbsp;</div>
-                                    <div class="dTableHead username"><span>{{ username|title }}</span></div>
-                                    <div class="dTableHead icon"><img src="{{ asset('images/misc/lu-award.png') }}" style="width: 27px; height: 27px;"/></div>
-                                    <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-note.png') }}" style="width: 27px; height: 27px;"/></div>
-                                    <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-assist.png') }}" style="width: 27px; height: 27px;"/></div>
-                                    <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-goal.png') }}" style="width: 27px; height: 27px;"/></div>
-                                    <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-goal-against.png') }}" style="width: 27px; height: 27px;"/></div>
-                                    <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-cards.png') }}" style="width: 27px; height: 27px;"/></div>
-                                    <div class="dTableHead icon"><img src="{{ asset('/images/misc/lu-startlineup.png') }}" style="width: 27px; height: 27px;"/></div>
+                                    <div class="dTableCell team {{ player.team.name|lower }}"><span class="num">{{ loop.index }}</span></div>
+                                    <div class="dTableCell player-name">{{ player.name }}</div>
+                                    <div class="dTableCell">&nbsp;</div>
+                                    <div class="dTableCell">&nbsp;</div>
+                                    <div class="dTableCell">&nbsp;</div>
+                                    <div class="dTableCell">&nbsp;</div>
+                                    <div class="dTableCell">&nbsp;</div>
+                                    <div class="dTableCell">&nbsp;</div>
+                                    <div class="dTableCell">&nbsp;</div>
                                 </div>
-                            </div>
-                            <div class="dTableBody">
-                                {% for i in 1..11 %}
-                                    {% set player = lineup.players[i]|default({'name':'', 'team':{'name':''}}) %}
-                                    <div class="dTableRow">
-                                        <div class="dTableCell team {{ player.team.name|lower }}"><span class="num">{{ loop.index }}</span></div>
-                                        <div class="dTableCell player-name">{{ player.name }}</div>
-                                        <div class="dTableCell">&nbsp;</div>
-                                        <div class="dTableCell">&nbsp;</div>
-                                        <div class="dTableCell">&nbsp;</div>
-                                        <div class="dTableCell">&nbsp;</div>
-                                        <div class="dTableCell">&nbsp;</div>
-                                        <div class="dTableCell">&nbsp;</div>
-                                        <div class="dTableCell">&nbsp;</div>
-                                    </div>
-                                {% endfor %}
-                            </div>
+                            {% endfor %}
                         </div>
-                        <div class="date">
-                            {% if lineup.lineup %}
-                                <i>{{ lineup.lineup.updatedAt|date('d.m.Y h:i') }}</i>
-                            {% endif %}
-                            &nbsp;
-                        </div>
-                    </li>
+                    </div>
+                    <div class="date">
+                        {{ dump(lineup) }}
+                        {% if lineup.lineup %}
+                            <i>{{ lineup.lineup.updatedAt|date('d.m.Y h:i') }}</i>
+                        {% endif %}
+                    </div>
+                </li>
 
-                {% endfor %}
+            {% endfor %}
 
-            </ul>
-
-        </div>
+        </ul>
 
     </div>
 
