@@ -91,7 +91,7 @@
             display: block;
             background-color: white;
             opacity: 0.75;
-            padding: 8px 2px 8px 15px;
+            padding: 7px 2px 7px 15px;
         }
 
         .dTableCell.team {
@@ -196,18 +196,19 @@
                                 <div class="dTableRow">
                                     <div class="dTableCell team {{ player.team.name|lower }}"><span class="num">{{ loop.index }}</span></div>
                                     <div class="dTableCell player-name">{{ player.name }}</div>
-                                    <div class="dTableCell">&nbsp;</div>
-                                    <div class="dTableCell">&nbsp;</div>
-                                    <div class="dTableCell">&nbsp;</div>
-                                    <div class="dTableCell">&nbsp;</div>
-                                    <div class="dTableCell">&nbsp;</div>
-                                    <div class="dTableCell">&nbsp;</div>
-                                    <div class="dTableCell">&nbsp;</div>
+                                    <div class="dTableCell"></div>
+                                    <div class="dTableCell"></div>
+                                    <div class="dTableCell"></div>
+                                    <div class="dTableCell"></div>
+                                    <div class="dTableCell"></div>
+                                    <div class="dTableCell"></div>
+                                    <div class="dTableCell"></div>
                                 </div>
                             {% endfor %}
                         </div>
                     </div>
                     <div class="date">
+                        <i>21.04.2019 : 20:32</i>
                         {% if lineup.lineup %}
                             <i>{{ lineup.lineup.updatedAt|date('d.m.Y h:i') }}</i>
                         {% endif %}
