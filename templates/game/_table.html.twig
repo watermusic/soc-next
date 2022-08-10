@@ -15,11 +15,14 @@
                                 </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
+                                {% for score in scores %}
                                 <tr>
-                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 md:pl-0">1</td>
-                                    <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">Lutz Bicker</td>
-                                    <td class="whitespace-nowrap py-4 px-3 text-right text-sm font-semibold text-gray-700">50</td>
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 md:pl-0">
+                                        {{ loop.index }}</td>
+                                    <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ score.name|title }}</td>
+                                    <td class="whitespace-nowrap py-4 px-3 text-right text-sm font-semibold text-gray-700">{{ score.score }}</td>
                                 </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
                         </div>

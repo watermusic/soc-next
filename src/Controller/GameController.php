@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Provider\KickerProvider;
 use App\Repository\PlayerRepository;
+use App\Repository\ScoreRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,11 +16,19 @@ class GameController extends AbstractController
 
     private PlayerRepository $playerRepository;
 
-    public function __construct(KickerProvider $kickerProvider, PlayerRepository $playerRepository)
+    private ScoreRepository $scoreRepository;
+
+    public function __construct(
+        KickerProvider $kickerProvider,
+        PlayerRepository $playerRepository,
+        ScoreRepository $scoreRepository
+    )
     {
         $this->kickerProvider = $kickerProvider;
 
         $this->playerRepository = $playerRepository;
+
+        $this->scoreRepository = $scoreRepository;
     }
 
     /**
@@ -30,6 +39,7 @@ class GameController extends AbstractController
     {
         return $this->render('game/dashboard.html.twig', [
             'news' => $this->kickerProvider->getNewsAsArray(),
+            'scores' => $this->getScoresForTable(),
         ]);
     }
 
@@ -74,5 +84,36 @@ class GameController extends AbstractController
     {
         return $this->render('game/standings.html.twig', [
         ]);
+    }
+
+    private function getScoresForTable(): array
+    {
+        $result = [];
+        $userResults = [];
+        $scores = $this->scoreRepository->findAll();
+
+        foreach ($scores as $score) {
+            if (! $score->getUser()) {
+                continue;
+            }
+
+            if (! isset($userResults[$score->getUser()->getName()])) {
+                $userResults[$score->getUser()->getName()] = [
+                    'name' => $score->getUser()->getName(),
+                    'score' => 0,
+                ];
+            }
+
+            $userResults[$score->getUser()->getName()]['score'] += $score->getScore();
+        }
+
+        foreach ($userResults as $userResult) {
+            $result[] = $userResult;
+        }
+        usort($result, static function ($a, $b) {
+            return strcmp($a["score"], $b["score"]);
+        });
+
+        return array_reverse($result);
     }
 }
