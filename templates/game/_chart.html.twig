@@ -1,0 +1,16 @@
+<section aria-labelledby="tables-title">
+    <div class="rounded-lg bg-white overflow-hidden shadow">
+        <div class="p-6">
+            <h2 class="text-base font-medium text-gray-900" id="tables-title">Statistik</h2>
+            <div class="flow-root mt-6">
+                <div class="flex flex-col">
+                    <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                            {{ render_chart(chart, {'class': 'my-chart'}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -9,6 +9,8 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\UX\Chartjs\Model\Chart;
 
 class GameController extends AbstractController
 {
@@ -18,10 +20,13 @@ class GameController extends AbstractController
 
     private ScoreRepository $scoreRepository;
 
+    private ChartBuilderInterface $chartBuilder;
+
     public function __construct(
         KickerProvider $kickerProvider,
         PlayerRepository $playerRepository,
-        ScoreRepository $scoreRepository
+        ScoreRepository $scoreRepository,
+        ChartBuilderInterface $chartBuilder
     )
     {
         $this->kickerProvider = $kickerProvider;
@@ -29,6 +34,8 @@ class GameController extends AbstractController
         $this->playerRepository = $playerRepository;
 
         $this->scoreRepository = $scoreRepository;
+
+        $this->chartBuilder = $chartBuilder;
     }
 
     /**
@@ -40,6 +47,7 @@ class GameController extends AbstractController
         return $this->render('game/dashboard.html.twig', [
             'news' => $this->kickerProvider->getNewsAsArray(),
             'scores' => $this->getScoresForTable(),
+            'chart' => $this->createChart(),
         ]);
     }
 
@@ -115,5 +123,58 @@ class GameController extends AbstractController
         });
 
         return array_reverse($result);
+    }
+
+    private function createChart(): Chart
+    {
+        $user = $this->getUser();
+
+        $scores = $this->scoreRepository->findByUser($user);
+
+        $chart = $this->chartBuilder->createChart(Chart::TYPE_BAR);
+
+        $matchDays = range(1, 34);
+        $labels = [];
+        $data = [];
+
+        foreach ($matchDays as $matchDay) {
+            $labels[] = $matchDay;
+            $data[] = 0;
+        }
+
+        foreach ($scores as $score) {
+            $data[$score->getMatchDay() - 1] = $score->getScore();
+        }
+
+        $simplesScores = array_map(static function ($score) {
+            return $score->getScore();
+        }, $scores);
+
+        $min = count($simplesScores) > 0 ? min($simplesScores) : 0;
+        $max = count($simplesScores) > 0 ? max($simplesScores) : 100;
+
+        $chart->setData([
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'label' => 'Punkte pro Spieltag',
+                    'backgroundColor' => 'rgb(255, 99, 132)',
+                    'borderColor' => 'rgb(255, 99, 132)',
+                    'data' => $data,
+                ],
+            ],
+        ]);
+
+        $chart->setOptions([
+            'responsive' => true,
+            'scales' => [
+                'y' => [
+                    'suggestedMin' => $min,
+                    'suggestedMax' => $max,
+                ],
+            ],
+        ]);
+
+        return $chart;
     }
 }

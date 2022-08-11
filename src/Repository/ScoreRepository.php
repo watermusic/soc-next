@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Score;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Score>
@@ -39,20 +40,20 @@ class ScoreRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Score[] Returns an array of Score objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return Score[] Returns an array of Score objects
+     */
+    public function findByUser(UserInterface $user): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.user = :val')
+            ->setParameter('val', $user)
+            ->orderBy('s.matchDay', 'ASC')
+            ->setMaxResults(40)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?Score
 //    {
