@@ -60,7 +60,7 @@ Encore
         config.corejs = 3;
     })
 
-    .enableVueLoader()
+    .enableVueLoader(() => {}, { runtimeCompilerBuild: false })
     .addPlugin(
         new webpack.DefinePlugin({
             __VUE_OPTIONS_API__: true,
@@ -96,9 +96,14 @@ Encore
 if (Encore.isProduction()) {
     Encore.addPlugin(new PurgeCssPlugin({
         paths: glob.sync([
-            path.join(__dirname, 'templates/**/*.html.twig'),
-            path.join(__dirname, 'assets/js/**/*.vue')
+            path.join(__dirname, 'templates/**/*.{html,twig,js}'),
+            path.join(__dirname, 'templates/.{html,twig,js}'),
+            path.join(__dirname, 'assets/js/**/*.vue'),
+            path.join(__dirname, 'assets/js/.vue')
         ]),
+        safelist: {
+            greedy: [/^Vue-Toastification/]
+        },
         defaultExtractor: (content) => {
             return content.match(/[\w-/:]+(?<!:)/g) || [];
         }
