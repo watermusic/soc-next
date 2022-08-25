@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection NullPointerExceptionInspection */
+
 namespace App\Controller;
 
 use App\Provider\KickerProvider;
@@ -118,8 +120,9 @@ class GameController extends AbstractController
         foreach ($userResults as $userResult) {
             $result[] = $userResult;
         }
+
         usort($result, static function ($a, $b) {
-            return strcmp($a["score"], $b["score"]);
+            return $a["score"] <=> $b["score"];
         });
 
         return array_reverse($result);
