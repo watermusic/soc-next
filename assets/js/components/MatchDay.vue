@@ -106,6 +106,21 @@
     { id: 3, name: '3. Spieltag', unavailable: false },
     { id: 4, name: '4. Spieltag', unavailable: false },
     { id: 5, name: '5. Spieltag', unavailable: false },
+    { id: 6, name: '6. Spieltag', unavailable: false },
+    { id: 7, name: '7. Spieltag', unavailable: false },
+    { id: 8, name: '8. Spieltag', unavailable: false },
+    { id: 9, name: '9. Spieltag', unavailable: false },
+    { id: 10, name: '10. Spieltag', unavailable: false },
+    { id: 11, name: '11. Spieltag', unavailable: false },
+    { id: 12, name: '12. Spieltag', unavailable: false },
+    { id: 13, name: '13. Spieltag', unavailable: false },
+    { id: 14, name: '14. Spieltag', unavailable: false },
+    { id: 15, name: '15. Spieltag', unavailable: false },
+    { id: 16, name: '16. Spieltag', unavailable: false },
+    { id: 17, name: '17. Spieltag', unavailable: false },
+    { id: 18, name: '18. Spieltag', unavailable: false },
+    { id: 19, name: '19. Spieltag', unavailable: false },
+    { id: 20, name: '20. Spieltag', unavailable: false },
   ]
 
   const selectedMatchDay = ref(matchDays[0])
