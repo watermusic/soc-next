@@ -52,7 +52,7 @@ class LineupRepository extends ServiceEntityRepository
             ->andWhere('l.user = :user')
             ->setParameter('user', $user)
             ->orderBy('l.updatedAt', 'ASC')
-            ->setMaxResults(10)
+            ->setMaxResults(50)
             ->getQuery()
             ->getResult()
             ;
@@ -69,33 +69,9 @@ class LineupRepository extends ServiceEntityRepository
             ->andWhere('l.matchday = :matchday')
             ->setParameter('matchday', $matchDay)
             ->orderBy('l.updatedAt', 'ASC')
-            ->setMaxResults(10)
+            ->setMaxResults(50)
             ->getQuery()
             ->getOneOrNullResult()
             ;
     }
-//    /**
-//     * @return Lineup[] Returns an array of Lineup objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('l')
-//            ->andWhere('l.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('l.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Lineup
-//    {
-//        return $this->createQueryBuilder('l')
-//            ->andWhere('l.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }
