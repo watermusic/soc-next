@@ -9,6 +9,7 @@
 /var/
 /vendor/
 /.idea/
+/.ddev/
 
 ###< symfony/framework-bundle ###
 
