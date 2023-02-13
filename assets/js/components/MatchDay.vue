@@ -22,7 +22,7 @@
           <span
               class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
           >
-            <SelectorIcon class="h-5 w-5 text-gray-800" aria-hidden="true" />
+            <ChevronUpDownIcon class="h-5 w-5 text-gray-800" aria-hidden="true" />
           </span>
         </ListboxButton>
 
@@ -89,7 +89,7 @@
     ListboxOptions,
     ListboxOption,
   } from '@headlessui/vue'
-  import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
+  import { CheckIcon, ChevronUpDownIcon, } from '@heroicons/vue/24/solid'
   import { useLineupStore } from "@/stores/lineup";
   import { usePlayerStore } from "@/stores/player";
   import { useToast } from "vue-toastification";
@@ -121,6 +121,20 @@
     { id: 18, name: '18. Spieltag', unavailable: false },
     { id: 19, name: '19. Spieltag', unavailable: false },
     { id: 20, name: '20. Spieltag', unavailable: false },
+    { id: 21, name: '21. Spieltag', unavailable: false },
+    { id: 22, name: '22. Spieltag', unavailable: false },
+    { id: 23, name: '23. Spieltag', unavailable: false },
+    { id: 24, name: '24. Spieltag', unavailable: false },
+    { id: 25, name: '25. Spieltag', unavailable: false },
+    { id: 26, name: '26. Spieltag', unavailable: false },
+    { id: 27, name: '27. Spieltag', unavailable: false },
+    { id: 28, name: '28. Spieltag', unavailable: false },
+    { id: 29, name: '29. Spieltag', unavailable: false },
+    { id: 30, name: '30. Spieltag', unavailable: false },
+    { id: 31, name: '31. Spieltag', unavailable: false },
+    { id: 32, name: '32. Spieltag', unavailable: false },
+    { id: 33, name: '33. Spieltag', unavailable: false },
+    { id: 34, name: '34. Spieltag', unavailable: false },
   ]
 
   const selectedMatchDay = ref(matchDays[0])
