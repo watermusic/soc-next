@@ -134,7 +134,7 @@ class KickerProvider
 
     public function getTeams(): array
     {
-        $tableUrl = 'https://www.kicker.de/bundesliga/tabelle/2022-23/1';
+        $tableUrl = 'https://www.kicker.de/bundesliga/tabelle/2023-24/1';
 
         $teamsResult = [];
 
