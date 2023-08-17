@@ -10,6 +10,11 @@ use Exception;
 use JetBrains\PhpStorm\ArrayShape;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class KickerProvider
 {
@@ -19,17 +24,23 @@ class KickerProvider
 
     private TeamRepository $teamRepository;
 
+    private HttpClientInterface $httpClient;
+
     public function __construct(
         PositionRepository $positionRepository,
-        TeamRepository $teamRepository
+        TeamRepository $teamRepository,
+        HttpClientInterface $httpClient
     ) {
         $this->positionRepository = $positionRepository;
 
         $this->teamRepository = $teamRepository;
+
+        $this->httpClient = $httpClient;
     }
 
     /**
      * @throws Exception
+     * @throws TransportExceptionInterface
      */
     #[ArrayShape(['news' => 'array'])]
     public function getNewsAsArray(): array
@@ -38,7 +49,9 @@ class KickerProvider
 
         $teams = $this->teamRepository->findAll();
 
-        $crawler = new Crawler(file_get_contents($feedUrl));
+        $response = $this->httpClient->request('GET', $feedUrl);
+
+        $crawler = new Crawler($response->getContent());
 
         $result = [];
         foreach ($crawler->filterXPath('//rss/channel/item') as $item) {
@@ -76,6 +89,12 @@ class KickerProvider
         return $imagePath ?? self::IMAGE_TEAM_DEFAULT_PATH;
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     public function getPlayersByTeam(string $teamName): array
     {
         $teams = $this->getTeams();
@@ -88,7 +107,9 @@ class KickerProvider
         $playerResult = [];
         $teamUrl = str_replace('info', 'kader', $teams[$teamName]['url']);
 
-        $crawler = new Crawler(file_get_contents($teamUrl));
+        $response = $this->httpClient->request('GET', $teamUrl);
+
+        $crawler = new Crawler($response->getContent());
 
         $positions = $crawler->filter('[data-target=squadContent] div > div');
 
@@ -132,13 +153,22 @@ class KickerProvider
         return $playerResult;
     }
 
+    /**
+     * @return array
+     * @throws TransportExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     */
     public function getTeams(): array
     {
         $tableUrl = 'https://www.kicker.de/bundesliga/tabelle/2023-24/1';
 
         $teamsResult = [];
 
-        $crawler = new Crawler(file_get_contents($tableUrl));
+        $response = $this->httpClient->request('GET', $tableUrl);
+
+        $crawler = new Crawler($response->getContent());
 
         $teams = $crawler->filter('.kick__v100-gameCell__team');
 
