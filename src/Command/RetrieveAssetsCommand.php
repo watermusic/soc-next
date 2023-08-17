@@ -15,6 +15,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsCommand(
     name: 'soc:retrieve:assets',
@@ -28,16 +33,21 @@ class RetrieveAssetsCommand extends Command
 
     private FilesystemMap $filesystemMap;
 
+    private HttpClientInterface $httpClient;
+
     public function __construct(
         TeamRepository $teamRepository,
         PlayerRepository $playerRepository,
-        FilesystemMap $filesystemMap
+        FilesystemMap $filesystemMap,
+        HttpClientInterface $httpClient
     ) {
         $this->teamRepository = $teamRepository;
 
         $this->playerRepository = $playerRepository;
 
         $this->filesystemMap = $filesystemMap;
+
+        $this->httpClient = $httpClient;
 
         parent::__construct('soc:retrieve:assets');
     }
@@ -57,6 +67,12 @@ class RetrieveAssetsCommand extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     private function storePlayerAssets(SymfonyStyle $io): void
     {
         $players = $this->playerRepository->findAll();
@@ -71,7 +87,9 @@ class RetrieveAssetsCommand extends Command
                 continue;
             }
 
-            $crawler = new Crawler(file_get_contents($player->getExternalDetailsUrl()));
+            $response = $this->httpClient->request('GET', $player->getExternalDetailsUrl());
+
+            $crawler = new Crawler($response->getContent());
             $imgNode = $crawler->filter('.kick__clip-sechseck.kick__clip-shadow img');
 
             if ($imgNode->count() === 0) {
@@ -89,11 +107,19 @@ class RetrieveAssetsCommand extends Command
         $io->writeln('.');
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     private function storeTeamAssets(SymfonyStyle $io): void
     {
         $urlKickerTeams = 'https://www.kicker.de/bundesliga/vereine';
 
-        $crawler = new Crawler(file_get_contents($urlKickerTeams));
+        $response = $this->httpClient->request('GET', $urlKickerTeams);
+
+        $crawler = new Crawler($response->getContent());
 
         $images = $crawler->filter('.kick__table .kick__table--ranking__teamicon :not(.kick__table--ranking__img-wrapper) img');
 
