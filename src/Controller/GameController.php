@@ -62,7 +62,7 @@ class GameController extends AbstractController
 
         $moneySpend = 0;
         $budget = 60000000;
-        $playersNeeded = 24;
+        $playersNeeded = 22;
 
         foreach ($players as $player) {
             $moneySpend += $player->getSigningFee() / 100;

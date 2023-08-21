@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Score;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -22,9 +23,17 @@ class ScoreCrudController extends AbstractCrudController
             $matchDays[$day . ". Spieltag"] = $day;
         }
 
+        yield AssociationField::new('user', 'Spieler');
         yield ChoiceField::new('matchDay', 'Spieltag')
             ->setChoices($matchDays);
         yield NumberField::new('score', 'Punkte');
-        yield AssociationField::new('user', 'Spieler');
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('matchDay')
+            ->add('user')
+            ;
     }
 }
