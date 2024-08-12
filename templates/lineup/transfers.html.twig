@@ -1,0 +1,155 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block javascripts %}
+{% endblock %}
+
+{% block body %}
+    <style>
+        body {
+            background: transparent !important;
+            color: #000 !important;
+            width: 1050px !important;
+            height: 1485px !important;
+        }
+        .wrapper {
+            padding: 10px 20px;
+            margin: 10px 20px;
+        }
+        .users {
+            padding: 0;
+            overflow: hidden;
+        }
+        .user {
+            width: 25%;
+            float: left;
+            padding: 5px 25px 5px 0;
+            font-size: 0.625rem;
+        }
+        .user .username {
+            text-align: left;
+        }
+        .user .username span {
+            font-size: 0.625rem;
+        }
+        .dTable{
+            display: table;
+            width: 100%;
+        }
+        .dTableRow {
+            display: table-row;
+        }
+        .dTableHeading {
+            display: table-header-group;
+        }
+
+        .dTableCell.player-name {
+            font-weight: bold;
+            width: 52%;
+            text-align: left;
+        }
+
+        .dTableCell .player-team {
+            font-size: 0.425rem;
+            font-weight: normal;
+        }
+
+        .dTableCell.player-rating {
+            width: 10%;
+        }
+
+        .dTableCell.player-value {
+
+        }
+
+        .dTableCell, .dTableHead {
+            display: table-cell;
+            width: 9%;
+            padding: 0px 4px;
+            text-align: center;
+        }
+
+        .dTableHead.icon {
+            padding: 8px 4px 4px;
+            text-align: center;
+            vertical-align: bottom;
+        }
+
+        .dTableCell {
+            border-right: 1px dashed #999999;
+        }
+
+        .dTableHeading {
+            display: table-header-group;
+        }
+        .dTableBody {
+            display: table-row-group;
+        }
+
+        .dTableStriped > .dTableBody > .dTableRow:nth-of-type(odd) {
+            background-color: #D9D9D9;
+        }
+
+        .dTableCell .num {
+            display: block;
+            background-color: white;
+            opacity: 0.75;
+            padding: 7px 2px 7px 15px;
+        }
+
+        .dTableCell.team {
+            background-size: contain;
+        }
+
+        .dTableFoot .dTableCell {
+            font-size: 10px;
+            padding: 2px;
+        }
+
+    </style>
+
+    {% for position, transfers in players %}
+
+        <div class="wrapper">
+
+            <h1>{{ position }}</h1>
+
+            <ul class="users">
+
+                {% for transfersChunk in transfers %}
+
+                <li class="user">
+                    <div class="dTable dTableStriped">
+                        <div class="dTableHeading">
+                            <div class="dTableRow">
+                                <div class="dTableHead username"><span>Name</span></div>
+                                <div class="dTableHead">Punkte</div>
+                                <div class="dTableHead">Wert</div>
+                            </div>
+                        </div>
+                        <div class="dTableBody">
+                            {% for transfer in transfersChunk %}
+                                <div class="dTableRow">
+                                    <div class="dTableCell player-name">
+                                        {{ transfer.displayLongName }}<br>
+                                        <span class="player-team">{{ teams[transfer.teamId].name }}</span>
+                                    </div>
+                                    <div class="dTableCell player-rating">{{ transfer.rating }}</div>
+                                    <div class="dTableCell player-value" style="text-align: right;">{{ transfer.marketValue|number_format(0, ',', '.') }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+    {#                    <div class="date">#}
+    {#                        {% if lineup.lineup %}#}
+    {#                            <i>{{ lineup.lineup.updatedAt|date('d.m.Y h:i') }}</i>#}
+    {#                        {% endif %}#}
+    {#                    </div>#}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+
+{% endblock %}
