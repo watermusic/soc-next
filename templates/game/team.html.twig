@@ -84,7 +84,7 @@
                 <div class="flex flex-col m-4 absolute top-0">
                     <p class="block text-base font-medium text-white truncate pointer-events-none">{{ player.name }}</p>
 
-                    {% set signingFee = player.signingFee / 100000000 %}
+                    {% set signingFee = player.signingFee / 1000000 %}
 
                     <p class="block text-sm font-light {{ textColor }} pointer-events-none">€{{ signingFee }}M</p>
                 </div>
