@@ -154,10 +154,10 @@ class LineupController extends AbstractController
             }
         }
 
-        $players[static::POSITION_GOALKEEPER] = array_chunk(array_values($this->array_sort($players[static::POSITION_GOALKEEPER], 'marketValue', SORT_DESC)), 48);
-        $players[static::POSITION_DEFENDER] = array_chunk(array_values($this->array_sort($players[static::POSITION_DEFENDER], 'marketValue', SORT_DESC)), 48);
-        $players[static::POSITION_MIDFIELDER] = array_chunk(array_values($this->array_sort($players[static::POSITION_MIDFIELDER], 'marketValue', SORT_DESC)), 48);
-        $players[static::POSITION_FORWARD] = array_chunk(array_values($this->array_sort($players[static::POSITION_FORWARD], 'marketValue', SORT_DESC)), 48);
+        $players[static::POSITION_GOALKEEPER] = array_chunk(array_values($this->array_sort($players[static::POSITION_GOALKEEPER], 'marketValue', SORT_DESC)), 47);
+        $players[static::POSITION_DEFENDER] = array_chunk(array_values($this->array_sort($players[static::POSITION_DEFENDER], 'marketValue', SORT_DESC)), 47);
+        $players[static::POSITION_MIDFIELDER] = array_chunk(array_values($this->array_sort($players[static::POSITION_MIDFIELDER], 'marketValue', SORT_DESC)), 47);
+        $players[static::POSITION_FORWARD] = array_chunk(array_values($this->array_sort($players[static::POSITION_FORWARD], 'marketValue', SORT_DESC)), 47);
 
         $html = $this->renderView('lineup/transfers.html.twig', [
             'title' => 'Spieler Liste',

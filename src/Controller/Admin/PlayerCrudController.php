@@ -51,15 +51,20 @@ class PlayerCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield ImageField::new('thumbUrl')
-            ->setBasePath('images/player')
+            ->setBasePath('images/player/origin')
             ->onlyOnIndex();
         yield TextField::new('name');
-        yield MoneyField::new('signingFee')->setCurrency('EUR');
-        //yield MoneyField::new('marketValue')->setCurrency('EUR');
-//        yield NumberField::new('averageGrade', 'Note');
-//        yield NumberField::new('averageScore', 'Punkte');
-        yield TextField::new('externalDetailsUrl');
-        yield TextField::new('externalSlug');
+        yield MoneyField::new('signingFee')
+            ->setCurrency('EUR')
+            ->setStoredAsCents(false)
+            ->setNumDecimals(0);
+        yield MoneyField::new('marketValue')
+            ->setCurrency('EUR')
+            ->setStoredAsCents(false)
+            ->setNumDecimals(0);
+        yield NumberField::new('averageGrade', 'Note');
+        yield NumberField::new('averageScore', 'Punkte');
+        // yield TextField::new('externalSlug');
         yield AssociationField::new('position');
         yield AssociationField::new('user');
         yield AssociationField::new('team');

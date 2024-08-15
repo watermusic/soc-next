@@ -1,7 +1,5 @@
 <?php
 
-/** @noinspection DisconnectedForeachInstructionInspection */
-
 namespace App\Command;
 
 use App\Entity\Team;
@@ -10,7 +8,6 @@ use App\Repository\TeamRepository;
 use Knp\Bundle\GaufretteBundle\FilesystemMap;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -52,6 +49,12 @@ class RetrieveAssetsCommand extends Command
         parent::__construct('soc:retrieve:assets');
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -68,10 +71,7 @@ class RetrieveAssetsCommand extends Command
     }
 
     /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ClientExceptionInterface
+     * @param SymfonyStyle $io
      */
     private function storePlayerAssets(SymfonyStyle $io): void
     {
@@ -87,16 +87,11 @@ class RetrieveAssetsCommand extends Command
                 continue;
             }
 
-            $response = $this->httpClient->request('GET', $player->getExternalDetailsUrl());
+            $imgUrl = $player->getExternalThumbUrl();
 
-            $crawler = new Crawler($response->getContent());
-            $imgNode = $crawler->filter('.kick__clip-sechseck.kick__clip-shadow img');
-
-            if ($imgNode->count() === 0) {
+            if ($imgUrl === '') {
                 continue;
             }
-
-            $imgUrl = str_replace('https://derivates.kicker.de/image/fetch/w_150,h_176,c_fill,g_auto,q_auto:best/', '', $imgNode->extract(['src'])[0]);
 
             $this->filesystemMap->get('public_images')->write($player->getStorageKey(), file_get_contents($imgUrl), true);
 
@@ -128,7 +123,7 @@ class RetrieveAssetsCommand extends Command
 
         foreach ($images as $image) {
             $team = $this->guessTeamName($image->attributes->getNamedItem('alt')->textContent);
-            $imageUrl = str_replace('https://derivates.kicker.de/image/fetch/w_30,h_30,c_fit,q_auto:best/', '', $image->attributes->getNamedItem('data-src')->textContent);
+            $imageUrl = str_replace('https://derivates.kicker.de/image/fetch/w_30,h_30,c_fit,q_auto:best/', '', $image->attributes->getNamedItem('src')->textContent);
 
             if ($this->filesystemMap->get('public_images')->has($team->getStorageKey())) {
                 $progressBar->advance();

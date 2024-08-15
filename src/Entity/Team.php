@@ -29,6 +29,9 @@ class Team
     #[ORM\OneToMany(mappedBy: 'homeTeam', targetEntity: Game::class)]
     private Collection $homeGames;
 
+    #[ORM\Column(length: 255)]
+    private ?string $externalId = null;
+
     public function __construct()
     {
         $this->players = new ArrayCollection();
@@ -158,5 +161,17 @@ class Team
     public function __toString(): string
     {
         return $this->getName();
+    }
+
+    public function getExternalId(): ?string
+    {
+        return $this->externalId;
+    }
+
+    public function setExternalId(string $externalId): static
+    {
+        $this->externalId = $externalId;
+
+        return $this;
     }
 }
