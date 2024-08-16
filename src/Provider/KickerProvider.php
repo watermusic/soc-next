@@ -28,9 +28,9 @@ class KickerProvider
 
     private HttpClientInterface $httpClient;
 
-    private string $databaseUrl = 'https://www.kicker-libero.de/api/sportsdata/v1/client_database/se-k00012024/717730ef757c139876ad50a12af9b831.json';
+    private static string $databaseUrl = 'https://www.kicker-libero.de/api/sportsdata/v1/client_database/se-k00012024/717730ef757c139876ad50a12af9b831.json';
 
-    private array|null $data = null;
+    private static array|null $data = null;
 
     public function __construct(
         PositionRepository $positionRepository,
@@ -233,12 +233,12 @@ class KickerProvider
     /**
      * @throws JsonException
      */
-    private function getData(): array
+    public static function getData(): array
     {
-        if ($this->data === null) {
-            $this->data = json_decode(file_get_contents($this->databaseUrl), true, 512, JSON_THROW_ON_ERROR);
+        if (self::$data === null) {
+            self::$data = json_decode(file_get_contents(self::$databaseUrl), true, 512, JSON_THROW_ON_ERROR);
         }
 
-        return $this->data;
+        return self::$data;
     }
 }

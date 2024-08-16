@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Lineup;
 use App\Entity\Player;
 use App\Entity\User;
+use App\Provider\KickerProvider;
 use Doctrine\Persistence\ManagerRegistry;
 use JsonException;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
@@ -122,7 +123,7 @@ class LineupController extends AbstractController
     {
         $pageUrl = $this->generateUrl('app_transfers_print', ['_format' => 'html'], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $database = json_decode(file_get_contents($this->projectDir . '/var/storage/players.json'), true, 512, JSON_THROW_ON_ERROR);
+        $database = KickerProvider::getData();
         $teams = [];
 
         $players = [

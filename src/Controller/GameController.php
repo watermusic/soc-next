@@ -1,6 +1,4 @@
-<?php
-
-/** @noinspection NullPointerExceptionInspection */
+<?php /** @noinspection ALL */
 
 namespace App\Controller;
 
@@ -11,6 +9,7 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
 
@@ -41,7 +40,7 @@ class GameController extends AbstractController
     }
 
     /**
-     * @throws Exception
+     * @throws Exception|TransportExceptionInterface
      */
     #[Route('/game/dashboard', name: 'app_game_dashboard')]
     public function dashboard(): Response
@@ -85,15 +84,13 @@ class GameController extends AbstractController
     #[Route('/game/lineup', name: 'app_game_lineup')]
     public function lineup(): Response
     {
-        return $this->render('game/lineup.html.twig', [
-        ]);
+        return $this->render('game/lineup.html.twig');
     }
 
     #[Route('/game/standings', name: 'app_game_standings')]
     public function standings(): Response
     {
-        return $this->render('game/standings.html.twig', [
-        ]);
+        return $this->render('game/standings.html.twig');
     }
 
     private function getScoresForTable(): array
