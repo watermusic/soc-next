@@ -28,7 +28,7 @@ class KickerProvider
 
     private HttpClientInterface $httpClient;
 
-    private static string $databaseUrl = 'https://www.kicker-libero.de/api/sportsdata/v1/client_database/se-k00012024/717730ef757c139876ad50a12af9b831.json';
+    private static string $databaseUrl = 'https://www.kicker-libero.de/api/sportsdata/v1/client_database/se-k00012025/717730ef757c139876ad50a12af9b831.json';
 
     private static array|null $data = null;
 
@@ -165,7 +165,7 @@ class KickerProvider
      */
     public function getTeams(): array
     {
-        $tableUrl = 'https://www.kicker.de/bundesliga/tabelle/2024-25/1';
+        $tableUrl = 'https://www.kicker.de/bundesliga/tabelle/2025-26/1';
 
         $teamsResult = [];
 
